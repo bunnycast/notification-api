@@ -1,0 +1,2 @@
+def TrustedHostMiddleware():
+    pass
