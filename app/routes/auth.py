@@ -28,7 +28,7 @@ async def register(sns_type: SnsType, reg_info: UserRegister, session: Session =
     if sns_type == SnsType.email:
         # email 중복 가입 검증
         is_exist = is_email_exist(reg_info.email)
-        if not reg_info.email or reg_info.pw:
+        if not reg_info.email or not reg_info.pw:
             return JSONResponse(status_code=400, content=dict(msg="Email and PW must be provided."))
         if is_exist:
             return JSONResponse(status_code=400, content=dict(msg="Email_EXISTS."))
@@ -44,7 +44,7 @@ async def register(sns_type: SnsType, reg_info: UserRegister, session: Session =
 @router.post("/login/{sns_type}", status_code=200)
 async def login(sns_type: SnsType, user_info: UserRegister):
     if sns_type == SnsType.email:
-        is_exist = await is_email_exist(user_info.email)
+        is_exist = is_email_exist(user_info.email)
         if not user_info.email or not user_info.pw:
             return JSONResponse(status_code=400, content=dict(msg="Email and PW must be provided."))
         if not is_exist:
