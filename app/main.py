@@ -29,7 +29,7 @@ def create_app():
     # redis initialize
 
     # middleware define
-    app.add_middleware(AccessControl, except_path_line=EXCEPT_PATH_LIST, except_path_regex=EXCEPT_PATH_REGEX)
+    app.add_middleware(AccessControl, except_path_list=EXCEPT_PATH_LIST, except_path_regex=EXCEPT_PATH_REGEX)
     app.add_middleware(
         CORSMiddleware,
         allow_origins=conf().ALLOW_SITE,
