@@ -13,7 +13,7 @@ from app.database.conn import db
 from app.database.schema import Users
 from app.models import SnsType, Token, UserRegister, UserToken
 
-router = APIRouter()
+router = APIRouter(prefix="/auth")
 
 
 @router.post("/register/{sns_type}", status_code=201, response_model=Token)
