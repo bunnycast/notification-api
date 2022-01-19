@@ -3,12 +3,13 @@ from typing import Optional
 
 import uvicorn
 from fastapi import FastAPI
+from starlette.middleware.base import BaseHTTPMiddleware
 from starlette.middleware.cors import CORSMiddleware
 
 from app.common.config import conf
 from app.common.consts import EXCEPT_PATH_LIST, EXCEPT_PATH_REGEX
 from app.database.conn import db, Base
-from app.middlewares.token_validator import AccessControl
+from app.middlewares.token_validator import access_control
 from app.middlewares.trust_hosts import TrustedHostMiddleware
 from app.routes import index, auth, users
 
@@ -29,7 +30,7 @@ def create_app():
     # redis initialize
 
     # middleware define
-    app.add_middleware(AccessControl, except_path_list=EXCEPT_PATH_LIST, except_path_regex=EXCEPT_PATH_REGEX)
+    app.add_middleware(middleware_class=BaseHTTPMiddleware, dispatch=access_control)
     app.add_middleware(
         CORSMiddleware,
         allow_origins=conf().ALLOW_SITE,
