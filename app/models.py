@@ -1,5 +1,7 @@
+from datetime import datetime
 from enum import Enum
 
+from pydantic import Field
 from pydantic.main import BaseModel
 from pydantic.networks import EmailStr
 
@@ -19,6 +21,10 @@ class SnsType(str, Enum):
 
 class Token(BaseModel):
     Authorization: str = None
+
+
+class MessageOk(BaseModel):
+    message: str = Field(default="OK")
 
 
 class UserToken(BaseModel):
@@ -43,3 +49,20 @@ class UserMe(BaseModel):
 
     class Config:
         orm_mode = True
+
+
+class AddApiKey(BaseModel):
+    user_memo: str = None
+
+    class Config:
+        orm_mode = True
+
+
+class GetApiKeyList(BaseModel):
+    id: int = None
+    access_ket: str = None
+    created_at: datetime = None
+
+
+class GetApiKeys(BaseModel):
+    secret_key: str = None

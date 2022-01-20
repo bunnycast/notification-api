@@ -1,3 +1,6 @@
+from app.common.consts import MAX_API_KEY
+
+
 class StatusCode:
     HTTP_500 = 500
     HTTP_400 = 400
@@ -71,5 +74,38 @@ class TokenDecodeEx(APIException):
             msg=f"Uncommon Access",
             detail=f"Token has been compromised.",
             code=f"{StatusCode.HTTP_400}{'2'.zfill(4)}",
+            ex=ex,
+        )
+
+
+class NoKeyMatchEx(APIException):
+    def __init__(self, ex: Exception = None):
+        super().__init__(
+            status_code=StatusCode.HTTP_404,
+            msg=f"해당 키에 대한 권한이 없거나 해당 키가 없습니다.",
+            detail="No keys Matched.",
+            code=f"{StatusCode.HTTP_404}{'3'.zfill(4)}",
+            ex=ex,
+        )
+
+
+class MaxKeyCountEx(APIException):
+    def __init__(self, ex: Exception = None):
+        super().__init__(
+            status_code=StatusCode.HTTP_400,
+            msg=f"API 키 생성은 {MAX_API_KEY}까지 가능합니다.",
+            detail="Max Key Count Reached.",
+            code=f"{StatusCode.HTTP_400}{'3'.zfill(4)}",
+            ex=ex,
+        )
+
+
+class SqlFailureEx(APIException):
+    def __init__(self, ex: Exception = None):
+        super().__init__(
+            status_code=StatusCode.HTTP_500,
+            msg=f"서버 에러입니다. 자동으로 리포팅되며, 빠르게 수정하겠습니다.",
+            detail="Inter Server Error",
+            code=f"{StatusCode.HTTP_500}{'2'.zfill(4)}",
             ex=ex,
         )
