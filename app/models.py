@@ -66,3 +66,14 @@ class GetApiKeyList(BaseModel):
 
 class GetApiKeys(BaseModel):
     secret_key: str = None
+
+
+class CreateAPIWhiteLists(BaseModel):
+    ip_addr: str = None
+
+    class Config:
+        orm_mode = True
+
+
+class GetAPIWhiteLists(CreateAPIWhiteLists):
+    id: int

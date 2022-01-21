@@ -9,7 +9,7 @@ from sqlalchemy import (
     Enum,
     Boolean, ForeignKey,
 )
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, relationship
 
 from app.database.conn import Base, db
 
@@ -22,6 +22,7 @@ class BaseMixin:
     def __init__(self):
         self.q = None
         self._session = None
+        self.served = None
 
     def all_columns(self):
         return [c for c in self.__table__.columns if c.primary_key is False and c.name != "created_at"]
@@ -92,10 +93,10 @@ class BaseMixin:
         obj = cls()
         if session:
             obj._session = session
-            obj._sees_served = True
+            obj.served = True
         else:
             obj._session = next(db.session())
-            obj._sees_served = True
+            obj.served = True
         query = obj._session(cls)
         query = query.filter(*cond)
         obj._q = query
@@ -121,47 +122,36 @@ class BaseMixin:
             self._q = self._q.order_by(col.asc()) if is_asc else self._q.order_by(col.desc())
         return self
 
-    def update(self, sess: Session = None, auto_commit: bool = False, **kwargs):
-        cls = self.cls_attr()
-        if sess:
-            query = sess.query(cls)
-        else:
-            sess = next(db.session())
-            query = sess.query(cls)
-        self.close()
-        return query.update(**kwargs)
+    def update(self, auto_commit: bool = False, **kwargs):
+        result = self._q.update(kwargs)
+        self._session.flush()
+        if auto_commit:
+            self._session.commit()
+        return result
 
     def first(self):
         result = self._q.first()
         self.close()
         return result
 
-    def delete(self, auto_commit: bool = False, **kwargs):
+    def delete(self, auto_commit: bool = False):
         self._q.delete()
         if auto_commit:
             self._session.commit()
-        self.close()
 
     def count(self):
+        print(self.served)
         result = self._q.count()
         self.close()
-        return self
+        return result
 
     def all(self):
         result = self._q.all()
         self.close()
         return self
 
-    def dict(self, *args: str):
-        q_dict = {}
-        for c in self.__table__.columns:
-            if c.name in args:
-                q_dict[c.name] = getattr(self, c.name)
-        return q_dict
-
     def close(self):
-        if self._sess_served:
-            self._session.commit()
+        if not self._sess_served:
             self._session.close()
         else:
             self._session.flush()
@@ -187,3 +177,10 @@ class ApiKeys(Base, BaseMixin):
     status = Column(Enum("active", "stopped", "deleted"), default="active")
     is_whitelisted = Column(Boolean, default=False)
     user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+    whitelist = relationship("ApiWhiteLists", bracket="api_keys")
+
+
+class ApiWhiteLists(Base, BaseMixin):
+    __tablename__ = "api_whitelists"
+    ip_addr = Column(String(length=64), nullable=False)
+    api_key_id = Column(Integer, ForeignKey("api_keys.id"), nullable=False)
