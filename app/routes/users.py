@@ -9,7 +9,7 @@ from starlette.requests import Request
 
 from app.common.consts import MAX_API_KEY
 from app.database.conn import db
-from app.database.schema import Users, ApiKeys
+from app.database.schema import Users, ApiKeys, ApiWhiteLists
 from app import models as m
 from app.errors import exceptions as ex
 from app.models import MessageOk
@@ -65,19 +65,19 @@ async def create_api_keys(request: Request, key_info: m.AddApiKey, session: Sess
 
 
 @router.put("/apikeys/{key_id}")
- async def update_api_keys(request: Request, key_id: int, key_info: m.AddApiKey):
-     """
-     API KEY User Memo Update
-     :param request:
-     :param key_id:
-     :param key_info:
-     :return:
-     """
-     user = request.state.user
-     key_data = ApiKeys.filter(id=key_id)
-     if key_data and key_data.first().user_id == user.id:
-         key_data.update(auto_commit=True, **key_info.dict())
-     raise ex.NoKeyMatchEx()
+async def update_api_keys(request: Request, key_id: int, key_info: m.AddApiKey):
+    """
+    API KEY User Memo Update
+    :param request:
+    :param key_id:
+    :param key_info:
+    :return:
+    """
+    user = request.state.user
+    key_data = ApiKeys.filter(id=key_id)
+    if key_data and key_data.first().user_id == user.id:
+        key_data.update(auto_commit=True, **key_info.dict())
+    raise ex.NoKeyMatchEx()
 
 
 @router.delete("/apikeys/{key_id}")
@@ -155,3 +155,5 @@ async def check_api_owner(user_id, key_id):
     api_keys = ApiKeys.get(id=key_id, user_id=user_id)
     if not api_keys:
         raise ex.NoKeyMatchEx()
+
+
