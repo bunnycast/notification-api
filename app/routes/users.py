@@ -36,16 +36,28 @@ async def delete_me(request: Request):
 
 @router.get("/apikeys", response_model=List[m.GetApiKeyList])
 async def get_api_keys(request: Request):
+    """
+    API KEY 조회
+    :param request:
+    :return:
+    """
     user = request.state.user()
-    api_keys = ApiKeys.filter(user_id=user.id).filter(id__gt=1).all()
+    api_keys = ApiKeys.filter(user_id=user.id).all()
     return api_keys
 
 
 @router.post("/apikeys", response_model=m.GetApiKeys)
 async def create_api_keys(request: Request, key_info: m.AddApiKey, session: Session = Depends(db.session)):
+    """
+    API KEY 생성
+    :param request:
+    :param key_info:
+    :param session:
+    :return:
+    """
     user = request.state.user
 
-    api_keys = ApiKeys.filter(user_id=user.id).all()
+    api_keys = ApiKeys.filter(session, user_id=user.id, status="active").count()
     if api_keys == MAX_API_KEY:
         raise ex.MaxKeyCountEx()
 
@@ -91,7 +103,7 @@ async def delete_api_keys(request: Request, key_id: int, access_key: str):
     return MessageOk()
 
 
-@router.get('/apikeys/{key_id}/whitelists', response_model=List[m.GetAPIWhiteLists])
+@router.get("/apikeys/{key_id}/whitelists", response_model=List[m.GetAPIWhiteLists])
 async def get_api_keys(request: Request, key_id: int):
     user = request.state.user
     await check_api_owner(user.id, key_id)
@@ -99,7 +111,7 @@ async def get_api_keys(request: Request, key_id: int):
     return whitelists
 
 
-@router.post('/apikeys/{key_id}/whitelists', response_model=m.GetAPIWhiteLists)
+@router.post("/apikeys/{key_id}/whitelists", response_model=m.GetAPIWhiteLists)
 async def create_api_keys(request: Request, key_id: int, ip: m.CreateAPIWhiteLists,
                           session: Session = Depends(db.session)):
     user = request.state.user
@@ -111,14 +123,12 @@ async def create_api_keys(request: Request, key_id: int, ip: m.CreateAPIWhiteLis
     return ip_reg
 
 
-@router.delete('/apikeys/{key_id}/whitelists/{list_id}')
+@router.delete("/apikeys/{key_id}/whitelists/{list_id}")
 async def delete_api_keys(request: Request, key_id: int, list_id: int):
     user = request.state.user
     await check_api_owner(user.id, key_id)
-    search_by_key = ApiKeys.filter(access_key=access_key)
-    if not search_by_key.first():
-        raise ex.NoKeyMatchEx()
-    search_by_key.delete(auto_commit=True)
+    ApiWhiteLists.filter(id=list_id, api_key=key_id).delete()
+
     return MessageOk()
 
 
