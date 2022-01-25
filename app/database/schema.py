@@ -1,5 +1,3 @@
-from datetime import datetime, timedelta
-
 from sqlalchemy import (
     Column,
     Integer,
@@ -51,7 +49,7 @@ class BaseMixin:
         return obj
 
     @classmethod
-    def get(cls, **kwargs):
+    def get(cls, **kwargs) -> object:
         """
         Simply get a Row
         :param kwargs:

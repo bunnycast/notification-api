@@ -3,7 +3,7 @@ from enum import Enum
 
 from pydantic import Field
 from pydantic.main import BaseModel
-from pydantic.networks import EmailStr
+from pydantic.networks import EmailStr, IPvAnyAddress
 
 
 class UserRegister(BaseModel):
@@ -71,9 +71,9 @@ class GetApiKeys(BaseModel):
 class CreateAPIWhiteLists(BaseModel):
     ip_addr: str = None
 
-    class Config:
-        orm_mode = True
-
 
 class GetAPIWhiteLists(CreateAPIWhiteLists):
     id: int
+
+    class Config:
+        orm_mode = True
