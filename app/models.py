@@ -29,7 +29,6 @@ class MessageOk(BaseModel):
 
 class UserToken(BaseModel):
     id: int
-    pw: str = None
     email: str = None
     name: str = None
     phone_num: str = None

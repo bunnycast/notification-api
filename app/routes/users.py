@@ -12,12 +12,12 @@ from app.database.conn import db
 from app.database.schema import Users, ApiKeys, ApiWhiteLists
 from app import models as m
 from app.errors import exceptions as ex
-from app.models import MessageOk
+from app.models import MessageOk, UserMe
 
 router = APIRouter(prefix="/user")
 
 
-@router.get("/me")
+@router.get("/me", response_model=UserMe)
 async def get_me(request: Request):
     user = request.state.user
     user_info = Users.get(id=user.id)

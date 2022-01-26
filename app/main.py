@@ -11,7 +11,7 @@ from app.common.consts import EXCEPT_PATH_LIST, EXCEPT_PATH_REGEX
 from app.database.conn import db, Base
 from app.middlewares.token_validator import access_control
 from app.middlewares.trust_hosts import TrustedHostMiddleware
-from app.routes import index, auth, users
+from app.routes import index, auth, users, services
 
 
 def create_app():
@@ -43,6 +43,7 @@ def create_app():
     # routes define
     app.include_router(index.router)
     app.include_router(auth.router, tags=["Authentication"], prefix="/api")
+    app.include_router(services.router, tags=["Services"], prefix="/api")
     app.include_router(users.router, tags=["users"], prefix="/api")
     return app
 
