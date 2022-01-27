@@ -1,4 +1,5 @@
 import json
+import os
 
 import requests
 from fastapi import APIRouter
@@ -7,8 +8,7 @@ from starlette.requests import Request
 
 from app.errors import exceptions as ex
 
-from app.models import MessageOk
-
+from app.models import MessageOk, KakaoMsgBody
 
 router = APIRouter(prefix="/services")
 
@@ -19,10 +19,10 @@ async def get_all_services(request: Request):
 
 
 @router.post("/kakao/send")
-async def send_kakao(request: Request):
-    token = ""
+async def send_kakao(request: Request, body: KakaoMsgBody):
+    token = os.environ.get("KAKAO_KEY", "")
     headers = {"Authorization": f"Bearer {token}", "Content-Type": "application/x-www-form-urlencoded"}
-    body = dict(objedct_type="text", text="Bunnycast Sample for FastAPI", link=dict(web_url=""), button_title="지금 확인")
+    body = dict(objedct_type="text", text=body.msg, link=dict(web_url=""), button_title="지금 확인")
     data = {"template_object": json.dumps(body, ensure_ascii=False)}
 
     res = requests.post("https://kapi.kakao.com/v2/api/talk/memo/default/send", headers=headers, data=data)
