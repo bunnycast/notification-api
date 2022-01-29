@@ -32,15 +32,15 @@ building notification api by fastApi
 
 ### 8. 메일 서버 설치
 
-### 9. Mailing List
+### 9. Mailing List (제외)
     1. 생성
     2. 조회
     3. 삭제
     4. 수정
 
-### 10. 배포
+### 10. 테스트코드 작성하기
+
+### 11. 배포
     1. Travis CI 사용해보기
     2. AWS Beanstalk 사용해보기
     3. Route 53 도메인 연결
-
-### 11. 테스트코드 작성하기
