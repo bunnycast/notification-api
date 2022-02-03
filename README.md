@@ -1,6 +1,13 @@
 # notification-api
 building notification api by fastApi
 
+# OVERVIEW
+    220104 ~ 220203
+    Reference from https://github.com/riseryan89/notification-api 
+    python 3.8
+    docker
+    travis
+
 # TODO
     설치:
     git clone
