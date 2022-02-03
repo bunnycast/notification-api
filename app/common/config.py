@@ -15,11 +15,12 @@ class Config:
     DB_ECHO: bool = True
     DEBUG: bool = False
     TEST_MODE: bool = False
+    DB_URL: str = environ.get("DB_URL", "mysql+pymysql://root@localhost/notification_api?charset=utf8mb4")
 
 
 @dataclass
 class LocalConfig(Config):
-    DB_URL: str = "mysql+pymysql://root@localhost/notification_api?charset=utf8mb4"
+    # DB_URL: str = "mysql+pymysql://root@localhost/notification_api?charset=utf8mb4"
     TRUSTED_HOSTS = ["*"]
     ALLOW_SITE = ["*"]
     DEBUG: bool = True
@@ -27,7 +28,7 @@ class LocalConfig(Config):
 
 @dataclass
 class ProdConfig(Config):
-    DB_URL: str = "mysql+pymysql://root@localhost/notification_api?charset=utf8mb4"
+    # DB_URL: str = "mysql+pymysql://root@localhost/notification_api?charset=utf8mb4"
     TRUSTED_HOSTS = ["*"]
     ALLOW_SITE = ["*"]
 
