@@ -25,7 +25,7 @@ async def get_all_services(request: Request):
 
 @router.post("/kakao/send")
 async def send_kakao(request: Request, body: KakaoMsgBody):
-    token = os.environ.get("KAKAO_KEY", "-Bq-ROwcm2vb7Rh-TleARMMYIzAQxHlct2L2rQo9cxcAAAF-xSFE3g")
+    token = os.environ.get("KAKAO_KEY", "-Bq-RO*********F-xSFE3g")
 
     headers = {"Authorization": f"Bearer {token}", "Content-Type": "application/x-www-form-urlencoded"}
     body = dict(object_type="text", text="sample text FASTAPI", link=dict(web_url="https://www.naver.com", mobile_url="https://www.naver.com"), button_title="지금 확인")
