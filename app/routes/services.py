@@ -25,10 +25,11 @@ async def get_all_services(request: Request):
 
 @router.post("/kakao/send")
 async def send_kakao(request: Request, body: KakaoMsgBody):
-    token = os.environ.get("KAKAO_KEY", "")
+    token = os.environ.get("KAKAO_KEY", "-Bq-ROwcm2vb7Rh-TleARMMYIzAQxHlct2L2rQo9cxcAAAF-xSFE3g")
+
     headers = {"Authorization": f"Bearer {token}", "Content-Type": "application/x-www-form-urlencoded"}
-    body = dict(objedct_type="text", text=body.msg, link=dict(web_url=""), button_title="지금 확인")
-    data = {"template_object": json.dumps(body, ensure_ascii=False)}
+    body = dict(object_type="text", text="sample text FASTAPI", link=dict(web_url="https://www.naver.com", mobile_url="https://www.naver.com"), button_title="지금 확인")
+    data = {"template_object": json.dumps(body, ensure_ascii=False)}    # json.dumps : dict > text 로 (datetime 형식 없어야 함)
 
     res = requests.post("https://kapi.kakao.com/v2/api/talk/memo/default/send", headers=headers, data=data)
     try:
@@ -36,7 +37,7 @@ async def send_kakao(request: Request, body: KakaoMsgBody):
         if res.json()["result_code"] != 0:
             raise Exception("KAKAO SEND FAILED")
     except Exception as e:
-        logger.warnign(e)
+        logger.warning(e)
         raise ex.KakaoSendFailureEx
 
     return MessageOk()

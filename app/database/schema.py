@@ -183,7 +183,7 @@ class ApiKeys(Base, BaseMixin):
     status = Column(Enum("active", "stopped", "deleted"), default="active")
     is_whitelisted = Column(Boolean, default=False)
     user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
-    whitelist = relationship("ApiWhiteLists", bracket="api_keys")
+    whitelist = relationship("ApiWhiteLists", backref="api_keys")
     users = relationship("Users", back_populates="keys")
 
 
