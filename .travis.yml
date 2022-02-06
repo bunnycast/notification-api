@@ -29,7 +29,7 @@ deploy:
 #  zip_file: source.zip
 #  access_key_id: $AWS_ACCESS_KEY_ID
 #  secret_access_key: $AWS_SECRET_ACCESS_KEY
-  access_key_id : $AWS_ACCESS
+  access_key_id: $AWS_ACCESS
   secret_access_key: $AWS_SECRET
   region: ap-northeast-2
   bucket: elasticbeanstalk-ap-northeast-2-884465654078
@@ -39,7 +39,7 @@ deploy:
   on:
     all_branches: true
 #    condition: $TRAVIS_BRANCH =~ ^master|develop$
-    condition: $TRAVIS_BRANCH =~ ^develop|master$
+    condition: $TRAVIS_BRANCH =~ ^develop|master
 #notifications:
 #  slack:
 #    - rooms:
