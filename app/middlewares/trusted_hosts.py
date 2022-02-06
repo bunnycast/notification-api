@@ -1,7 +1,6 @@
 import typing
 
 from starlette.datastructures import Headers, URL
-from starlette.middleware.trustedhost import ENFORCE_DOMAIN_WILDCARD
 from starlette.responses import RedirectResponse, PlainTextResponse
 from starlette.types import ASGIApp, Scope, Receive, Send
 

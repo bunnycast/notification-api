@@ -11,7 +11,7 @@ from app.common.config import conf
 from app.common.consts import EXCEPT_PATH_LIST, EXCEPT_PATH_REGEX
 from app.database.conn import db, Base
 from app.middlewares.token_validator import access_control
-from app.middlewares.trust_hosts import TrustedHostMiddleware
+from app.middlewares.trusted_hosts import TrustedHostMiddleware
 from app.routes import index, auth, users, services
 
 
@@ -27,7 +27,6 @@ def create_app():
     app = FastAPI()
     conf_dict = asdict(c)
     db.init_app(app, **conf_dict)
-    Base.metadata.create_all(db.engine)
 
     # DB initialize
 
@@ -51,7 +50,7 @@ def create_app():
         app.include_router(services.router, tags=["Services"], prefix="/api", dependencies=[Depends(API_KEY_HEADER)])
     else:
         app.include_router(services.router, tags=["Services"], prefix="/api")
-    app.include_router(users.router, tags=["users"], prefix="/api")
+    app.include_router(users.router, tags=["users"], prefix="/api", dependencies=[Depends(API_KEY_HEADER)])
     return app
 
 
