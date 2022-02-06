@@ -34,7 +34,7 @@ def create_app():
 
     # middleware define
     app.add_middleware(middleware_class=BaseHTTPMiddleware, dispatch=access_control)
-    app.add_middleware(
+    app.add_middleware(     # Backend와 Frontend 주소가 달라도 연동이 되게 함
         CORSMiddleware,
         allow_origins=conf().ALLOW_SITE,
         allow_credentials=True,
