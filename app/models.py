@@ -46,6 +46,7 @@ class UserToken(BaseModel):
     email: str = None
     name: str = None
     phone_num: str = None
+    profile_img: str = None
     sns_type: str = None
 
     class Config:
@@ -71,9 +72,9 @@ class AddApiKey(BaseModel):
         orm_mode = True
 
 
-class GetApiKeyList(BaseModel):
+class GetApiKeyList(AddApiKey):
     id: int = None
-    access_ket: str = None
+    access_key: str = None
     created_at: datetime = None
 
 
