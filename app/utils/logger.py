@@ -17,7 +17,6 @@ async def api_logger(request: Request, response=None, error=None):
     status_code = error.status_code if error else response.status_code
     error_log = None
     user = request.state.user
-    body = await request.body()
     if error:
         if request.state.inspect:
             frame = request.state.inspect
