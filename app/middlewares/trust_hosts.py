@@ -6,7 +6,7 @@ from starlette.responses import RedirectResponse, PlainTextResponse
 from starlette.types import ASGIApp, Scope, Receive, Send
 
 
-ENFORCE_DOMAIN_WILDCARD = "Domain wildcard patterns must ve like '*.example.com'."
+ENFORCE_DOMAIN_WILDCARD = "Domain wildcard patterns must be like '*.example.com'."
 
 
 class TrustedHostMiddleware:
@@ -40,8 +40,9 @@ class TrustedHostMiddleware:
         headers = Headers(scope=scope)
         host = headers.get("host", "").split(":")[0]
         is_valid_host = False
+        found_www_redirect = False
         for pattern in self.allowed_hosts:
-            if(
+            if (
                 host == pattern
                 or (pattern.startswith("*") and host.endswith(pattern[1:]))
                 or URL(scope=scope).path in self.except_path
