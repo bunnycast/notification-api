@@ -57,11 +57,12 @@ email_content = """
 </p>
 """
 
+
 @router.post("email/send_by_gmail")
 async def email_by_gmail(request: Request, mailing_list: SendEmail):
     t = time()
     send_email(mailing_list=mailing_list.email_to)
-    return MessageOk
+    return MessageOk()
 
 
 @router.post("email/send_by_gmail2")
@@ -70,7 +71,7 @@ async def email_by_gmail2(request: Request, mailing_list: SendEmail, background_
     background_tasks.add_task(
         send_email, mailing_list=mailing_list.email_to
     )
-    return MessageOk
+    return MessageOk()
 
 
 def send_email(**kwargs):
@@ -88,6 +89,7 @@ def send_email(**kwargs):
                 ]
                 sleep(1)
                 yag.send(m_l.email, "Send Email Test.", contents)
+                last_email = m_l.email
             return True
         except Exception as e:
             print(e)
@@ -131,10 +133,10 @@ async def email_by_ses():
 
     # Create a new SES resource and specify a region.
     client = boto3.client(
-     'ses',
-     region_name=region,
-     aws_access_key_id=os.environ.get("AWS_KEY", None),
-     aws_secret_access_key=os.environ.get("AWS_SECRET", None),
+        'ses',
+        region_name=region,
+        aws_access_key_id=os.environ.get("AWS_KEY", None),
+        aws_secret_access_key=os.environ.get("AWS_SECRET", None),
     )
 
     # Try to send the email.
@@ -164,9 +166,9 @@ async def email_by_ses():
      )
     # Display an error if something goes wrong.
     except ClientError as e:
-     print(e.response['Error']['Message'])
+        print(e.response['Error']['Message'])
     else:
-     print("Email sent! Message ID:"),
-     print(response['MessageId'])
+        print("Email sent! Message ID:"),
+        print(response['MessageId'])
 
     return MessageOk()
