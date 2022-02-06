@@ -41,7 +41,7 @@ async def get_api_keys(request: Request):
     :param request:
     :return:
     """
-    user = request.state.user()
+    user = request.state.user
     api_keys = ApiKeys.filter(user_id=user.id).all()
     return api_keys
 
@@ -103,35 +103,6 @@ async def delete_api_keys(request: Request, key_id: int, access_key: str):
     return MessageOk()
 
 
-@router.get("/apikeys/{key_id}/whitelists", response_model=List[m.GetAPIWhiteLists])
-async def get_api_keys(request: Request, key_id: int):
-    user = request.state.user
-    await check_api_owner(user.id, key_id)
-    whitelists = ApiWhiteLists.filter(api_key_id=key_id).all()
-    return whitelists
-
-
-@router.post("/apikeys/{key_id}/whitelists", response_model=m.GetAPIWhiteLists)
-async def create_api_keys(request: Request, key_id: int, ip: m.CreateAPIWhiteLists,
-                          session: Session = Depends(db.session)):
-    user = request.state.user
-    await check_api_owner(user.id, key_id)
-    ip_dup = ApiWhiteLists.get(api_key_id=key_id, ip_addr=ip.ip_addr)
-    if ip_dup:
-        return ip_dup
-    ip_reg = ApiWhiteLists.create(session=session, auto_commit=True, api_key_id=key_id, ip_addr=ip.ip_addr)
-    return ip_reg
-
-
-@router.delete("/apikeys/{key_id}/whitelists/{list_id}")
-async def delete_api_keys(request: Request, key_id: int, list_id: int):
-    user = request.state.user
-    await check_api_owner(user.id, key_id)
-    ApiWhiteLists.filter(id=list_id, api_key=key_id).delete()
-
-    return MessageOk()
-
-
 @router.get('/apikeys/{key_id}/whitelists', response_model=List[m.GetAPIWhiteLists])
 async def get_api_keys(request: Request, key_id: int):
     user = request.state.user
@@ -149,7 +120,7 @@ async def create_api_keys(request: Request, key_id: int, ip: m.CreateAPIWhiteLis
     try:
         _ip = ipaddress.ip_address(ip.ip_addr)
     except Exception as e:
-        raise ex.InvalidIpEx(ip.ip_addr)
+        raise ex.InvalidIpEx(ip.ip_addr, e)
     if ApiWhiteLists.filter(api_key_id=key_id).count() == MAX_API_WHITELIST:
         raise ex.MaxWLCountEx()
     ip_dup = ApiWhiteLists.get(api_key_id=key_id, ip_addr=ip.ip_addr)
