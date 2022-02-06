@@ -18,7 +18,7 @@ class BaseMixin:
     updated_at = Column(DateTime, nullable=False, default=func.utc_timestamp(), onupdate=func.utc_timestamp())
 
     def __init__(self):
-        self.q = None
+        self._q = None
         self._session = None
         self.served = None
 
@@ -96,8 +96,8 @@ class BaseMixin:
             obj.served = True
         else:
             obj._session = next(db.session())
-            obj.served = True
-        query = obj._session(cls)
+            obj.served = False
+        query = obj._session.query(cls)
         query = query.filter(*cond)
         obj._q = query
         return obj
@@ -128,7 +128,7 @@ class BaseMixin:
         ret = None
 
         self._session.flush()
-        if qs > 0:
+        if qs > 0 :
             ret = self._q.first()
         if auto_commit:
             self._session.commit()
@@ -153,10 +153,10 @@ class BaseMixin:
     def all(self):
         result = self._q.all()
         self.close()
-        return self
+        return result
 
     def close(self):
-        if not self._sess_served:
+        if not self.served:
             self._session.close()
         else:
             self._session.flush()

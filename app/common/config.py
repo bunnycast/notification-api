@@ -38,7 +38,7 @@ class TestConfig(Config):
     DB_URL: str = "mysql+pymysql://root@localhost/notification_api?charset=utf8mb4"
     TRUSTED_HOSTS = ["*"]
     ALLOW_SITE = ["*"]
-    TEST_MODE: bool =True
+    TEST_MODE: bool = True
 
 
 def conf():
@@ -46,6 +46,6 @@ def conf():
     환경 불러오기
     :return:
     """
-    config = dict(prod=ProdConfig(), local=LocalConfig, test=TestConfig())
+    config = dict(prod=ProdConfig, local=LocalConfig, test=TestConfig)
     return config[environ.get("API_ENV", "local")]()
 
