@@ -1,5 +1,6 @@
 import base64
 import hmac
+import os
 import time
 import typing
 import re
@@ -107,7 +108,7 @@ async def access_control(request: Request, call_next):
                         raise ex.NotAuthorized()
         else:
             # 템플릿 렌더링인 경우 쿠키에서 토큰 검사
-            cookies["Authorization"] = "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6NiwiZW1haWwiOiJzdHVkZW50QHNjaG9vbC5jb20iLCJuYW1lIjpudWxsLCJwaG9uZV9udW0iOm51bGwsInByb2ZpbGVfaW1nIjpudWxsLCJzbnNfdHlwZSI6bnVsbH0.cLZfJDyvgrDQby_ijFNhXtCJbNccR_qn28__VvFmh_o"
+            cookies["Authorization"] = os.environ.get("BEARER_TOKEN", "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6NiwiZW1haWwiOiJzdHVkZW50QHNjaG9vbC5jb20iLCJuYW1lIjpudWxsLCJwaG9uZV9udW0iOm51bGwsInByb2ZpbGVfaW1nIjpudWxsLCJzbnNfdHlwZSI6bnVsbH0.cLZfJDyvgrDQby_ijFNhXtCJbNccR_qn28__VvFmh_o")
 
             if "Authorization" not in cookies.keys():
                 raise ex.NotAuthorized()
