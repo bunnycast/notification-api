@@ -15,6 +15,7 @@ from app.middlewares.trusted_hosts import TrustedHostMiddleware
 from app.routes import index, auth, users, services
 
 
+# API Swagger 문서에 Authorized 버튼 추가
 API_KEY_HEADER = APIKeyHeader(name="Authorization", auto_error=False)
 
 
@@ -50,7 +51,7 @@ def create_app():
         app.include_router(services.router, tags=["Services"], prefix="/api", dependencies=[Depends(API_KEY_HEADER)])
     else:
         app.include_router(services.router, tags=["Services"], prefix="/api")
-    app.include_router(users.router, tags=["users"], prefix="/api", dependencies=[Depends(API_KEY_HEADER)])
+    app.include_router(users.router, tags=["Users"], prefix="/api", dependencies=[Depends(API_KEY_HEADER)])
     return app
 
 

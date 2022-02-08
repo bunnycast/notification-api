@@ -32,6 +32,7 @@ async def access_control(request: Request, call_next):
     request.state.user = None
     request.state.service = None
 
+    # X-forwarded-for : AWS Load Balancer를 지나면서 받는 헤더 : client의 IP 표시
     ip = request.headers["x-forwarded-for"] if "x-forwarded-for" in request.headers.keys() else request.client.host
     request.state.ip = ip.split(",")[0] if "," in ip else ip
     headers = request.headers
@@ -106,13 +107,13 @@ async def access_control(request: Request, call_next):
                         raise ex.NotAuthorized()
         else:
             # 템플릿 렌더링인 경우 쿠키에서 토큰 검사
-            cookies["Authorization"] = "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MTQsImVtYWlsIjoia29hbGFAZGluZ3JyLmNvbSIsIm5hbWUiOm51bGwsInBob25lX251bWJlciI6bnVsbCwicHJvZmlsZV9pbWciOm51bGwsInNuc190eXBlIjpudWxsfQ.4vgrFvxgH8odoXMvV70BBqyqXOFa2NDQtzYkGywhV48"
+            cookies["Authorization"] = "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6NiwiZW1haWwiOiJzdHVkZW50QHNjaG9vbC5jb20iLCJuYW1lIjpudWxsLCJwaG9uZV9udW0iOm51bGwsInByb2ZpbGVfaW1nIjpudWxsLCJzbnNfdHlwZSI6bnVsbH0.cLZfJDyvgrDQby_ijFNhXtCJbNccR_qn28__VvFmh_o"
 
             if "Authorization" not in cookies.keys():
                 raise ex.NotAuthorized()
 
             token_info = await token_decode(access_token=cookies.get("Authorization"))
-            request.state.user = UserToken(**token_info)
+            request.state.user = UserToken(**token_info)    # user를 객체화 해서 가져옴, 원래는 딕셔너리 형태로 ...user["id"] 꼴로 가져오게 됨
 
         response = await call_next(request)
         await api_logger(request=request, response=response)

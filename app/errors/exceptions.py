@@ -34,6 +34,8 @@ class APIException(Exception):
         super().__init__(ex)
 
 
+# 현업에서는 detail과 error code 정도만 보내주면 frontend에서 사용자 친화적으로 메시지를 구성해 전달한다.
+# 서비스 규모가 커지면 늘어나는 exception을 DB화 해 관리한다.
 class NotFoundUserEx(APIException):
     def __init__(self, user_id: int = None, ex: Exception = None):
         super().__init__(
