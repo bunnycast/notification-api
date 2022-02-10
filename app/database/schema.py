@@ -128,7 +128,7 @@ class BaseMixin:
         ret = None
 
         self._session.flush()
-        if qs > 0 :
+        if qs > 0:
             ret = self._q.first()
         if auto_commit:
             self._session.commit()
@@ -144,14 +144,14 @@ class BaseMixin:
         if auto_commit:
             self._session.commit()
 
-    def count(self):
+    def all(self):
         print(self.served)
-        result = self._q.count()
+        result = self._q.all()
         self.close()
         return result
 
-    def all(self):
-        result = self._q.all()
+    def count(self):
+        result = self._q.count()
         self.close()
         return result
 
