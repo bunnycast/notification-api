@@ -116,7 +116,7 @@ async def access_control(request: Request, call_next):
             token_info = await token_decode(access_token=cookies.get("Authorization"))
             request.state.user = UserToken(**token_info)    # user를 객체화 해서 가져옴, 원래는 딕셔너리 형태로 ...user["id"] 꼴로 가져오게 됨
 
-        response = await call_next(request)
+        response = await call_next(request)     # 함수 실행 (API)
         await api_logger(request=request, response=response)
     except Exception as e:
         error = await exception_handler(e)
