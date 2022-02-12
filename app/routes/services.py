@@ -55,6 +55,9 @@ email_content = """
 <p> 
 <br>
 </p>
+<p>
+{}님 안녕하세요!
+</p>
 """
 
 
@@ -70,7 +73,7 @@ async def email_by_gmail2(request: Request, mailing_list: SendEmail, background_
     t = time()
     background_tasks.add_task(
         send_email, mailing_list=mailing_list.email_to
-    )
+    )       # background_tasks : django 의 salary와 같이 유저의 지속적인 접속이 필요없을 때 비동기로 일을 처리할 수 있음
     return MessageOk()
 
 
