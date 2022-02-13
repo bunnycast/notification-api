@@ -101,9 +101,9 @@ def send_email(**kwargs):
 
 @router.post("email/send_by_ses")
 async def email_by_ses():
-    # sender = "Bunnycast Name <sender@>"
-    sender = "Bunnycast =?UTF-8?B?65287J207Ja4?= <sender@d9.is>"
-    # sender = "Bunnycast 다니엘킴 <sender@>"
+    # sender = "Bunnycast NAME <sender@>"
+    sender = "Bunnycast =?UTF-8?B?64uk64uI7JeY7YK0?= <sender@d9.is>"    # 한글 이름 BASE 64 인코딩
+    # sender = "Bunnycast 다니엘킴 <sender@>"   # 한글에 대해 non-ascii code error로 한글 깨짐
     recipient = ["berzzubunny@gmail.com"]
 
     # If necessary, replace us-west-2 with the AWS Region you're using for Amazon SES.
@@ -126,7 +126,7 @@ async def email_by_ses():
     
     Amazon SES는 이러한 부담이 없으므로 몇 분 만에 이메일 발송을 시작할 수 있습니다. Amazon.com이 대규모의 자사 고객 기반을 지원하기 위해 구축한 정교한 이메일 인프라와 오랜 경험을 활용할 수 있습니다.</p>
     <p>링크를 통해 확인하세요!
-     <a href='https://dingrr.com'>Dingrr</a></p>
+     <a href='https://velog.io/@bunnycast'>Bunnycast</a></p>
     </body>
     </html>
              """
@@ -135,7 +135,7 @@ async def email_by_ses():
     charset = "UTF-8"
 
     # Create a new SES resource and specify a region.
-    client = boto3.client(
+    client = boto3.client(      # boto3 : AWS를 python에서 편하게 쓸 수 있도록 지원하는 공식 라이브러리
         'ses',
         region_name=region,
         aws_access_key_id=os.environ.get("AWS_KEY", None),
@@ -144,29 +144,29 @@ async def email_by_ses():
 
     # Try to send the email.
     try:
-     # Provide the contents of the email.
-     response = client.send_email(
-         Destination={
-             'ToAddresses': recipient
-         },
-         Message={
-             'Body': {
-                 'Html': {
-                     'Charset': charset,
-                     'Data': BODY_HTML,
+         # Provide the contents of the email.
+         response = client.send_email(
+             Destination={
+                 'ToAddresses': recipient
+             },
+             Message={
+                 'Body': {
+                     'Html': {
+                         'Charset': charset,
+                         'Data': BODY_HTML,
+                     },
+                     'Text': {
+                         'Charset': charset,
+                         'Data': BODY_TEXT,
+                     },
                  },
-                 'Text': {
+                 'Subject': {
                      'Charset': charset,
-                     'Data': BODY_TEXT,
+                     'Data': title,
                  },
              },
-             'Subject': {
-                 'Charset': charset,
-                 'Data': title,
-             },
-         },
-         Source=sender,
-     )
+             Source=sender,
+         )
     # Display an error if something goes wrong.
     except ClientError as e:
         print(e.response['Error']['Message'])
