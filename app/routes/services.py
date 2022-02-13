@@ -85,7 +85,7 @@ def send_email(**kwargs):
     if mailing_list:
         try:
             yag = yagmail.SMTP({email_addr: "Bunnycast"}, email_pw)
-            # https://myaccount.google.com/u/1/lesssecureapps
+            # https://myaccount.google.com/u/1/lesssecureapps 보안 수준이 낮은 앱의 엑세스 허용
             for m_l in mailing_list:
                 contents = [
                     email_content.format(m_l.name)
