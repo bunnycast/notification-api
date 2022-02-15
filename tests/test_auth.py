@@ -10,7 +10,7 @@ def test_registration(client, session):
     :return:
     """
     user = dict(email="berzzubunny@gmail.com", pw="1111", name="Daniel Kim", phone="01050128587")
-    res = client.post("api/auth/registration/email", json=user)
+    res = client.post("api/auth/register/email", json=user)
     res_body = res.json()
     print(res.json())
     assert res.status_code == 201
@@ -30,4 +30,4 @@ def test_registration_exist_email(client, session):
     res = client.post("api/auth/register/email", json=user)
     res_body = res.json()
     assert res.status_code == 400
-    assert "EMAIL_EXISTS" == res_body["msg"]
+    assert "Email_EXISTS." == res_body["msg"]

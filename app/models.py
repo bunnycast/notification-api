@@ -78,7 +78,7 @@ class GetApiKeyList(AddApiKey):
     created_at: datetime = None
 
 
-class GetApiKeys(BaseModel):
+class GetApiKeys(GetApiKeyList):
     secret_key: str = None
 
 
