@@ -29,7 +29,8 @@ def create_app():
     conf_dict = asdict(c)
     db.init_app(app, **conf_dict)
 
-    # DB initialize
+    # DB initialize 명령어
+    Base.metadata.create_all(db.engine)
 
     # redis initialize
 

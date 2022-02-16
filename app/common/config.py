@@ -20,7 +20,6 @@ class Config:
 
 @dataclass
 class LocalConfig(Config):
-    # DB_URL: str = "mysql+pymysql://root@localhost/notification_api?charset=utf8mb4"
     TRUSTED_HOSTS = ["*"]
     ALLOW_SITE = ["*"]
     DEBUG: bool = True
@@ -28,7 +27,6 @@ class LocalConfig(Config):
 
 @dataclass
 class ProdConfig(Config):
-    # DB_URL: str = "mysql+pymysql://root@localhost/notification_api?charset=utf8mb4"
     TRUSTED_HOSTS = ["*"]
     ALLOW_SITE = ["*"]
 

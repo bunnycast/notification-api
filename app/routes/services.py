@@ -20,6 +20,8 @@ router = APIRouter(prefix="/services")
 
 @router.get("")
 async def get_all_services(request: Request):
+    print("***")
+    print("키다", request)
     return dict(your_email=request.state.user.email)
 
 
